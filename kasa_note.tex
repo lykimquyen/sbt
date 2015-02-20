@@ -566,10 +566,71 @@ same annotation class in the annotation contact map.
 
 \end{e}
 
+%=======================================================================
+\subsection{Preprocess.ml}
+
+\begin{i}
+\item \verb|set_bound_sites|: return a set of sites that are bound. In a
+  list of agent interface, doing a folding in each agent interface.
+
+  - if the state of this site is free
+
+  - then return the set,
+
+  - otherwise add into this set:
+  \{an agent index, agent type, and site\}.
+
+  - Then return the set.
+
+  The parameters are: an index of agent (k), an agent type (ag), and a set.
+
+\begin{verbatim}
+let set_bound_sites parameters error k ag set =
+Cckappa_sig.Site_map_and_set.fold_map
+  (fun site state (error, set) ->
+    if state.Cckappa_sig.site_free = Some true
+    then error, set
+    else
+     Cckappa_sig.add_set parameters error 
+     {Cckappa_sig.agent_index = k;
+      Cckappa_sig.agent_type = ag.Cckappa_sig.agent_name;
+      Cckappa_sig.site = site} set)
+  ag.Cckappa_sig.agent_interface
+  (error, set)
+\end{verbatim}
+
+\item \verb|translate_rule|: 
+
+\item \verb|add_bond|: taking a list of parameters $i$, 
+  \verb|id_agent, agent, site| and second agent \verb|id_agent', agent', site'|
+  and a list of bond
+
+\end{i}
+%=======================================================================
+\subsection{Prepreprocess.ml}
+
+\begin{i}
+\item \verb|check_frehness|:
+
+\begin{verbatim}
+let check_freshness parameters error str id id_set = (*taking a string, an
+id, and a set of id*)
+  let error,id_set = (*then check in this id_set*)
+    if Mods.StringSet.mem id id_set (*if id is a member of id_set*)
+    then 
+      begin (*then give a warning that this id already used; and return an
+id_set *)
+	warn parameters error (Some (str^" '"^id^"' is already used")) Exit id_set
+      end 
+    else  (*otherwise add this id into id_set*)
+      error,Mods.StringSet.add id id_set
+  in 
+  error,id_set (*check it in an id_set*)
+\end{verbatim}
 
 
 
-
+\end{i}
 
 
 
