@@ -115,6 +115,19 @@ let length_list classes =
 
 let length_list_list classes = List.map length_list classes
 
+let length_list2 list =
+  let rec aux count acc = function
+    | [] -> []
+    | [x] -> (x, count + 1) :: acc
+    | a :: (b :: _ as t) ->
+      if a = b
+      then aux (count +1) acc t
+      else
+        aux 0 ((a, count +1) :: acc) t
+  in aux 0 [] list
+  
+let length_list_list2 l = List.map length_list2
+
 (*sorting the length of a list of list *)
 
 let length_sort lists =
@@ -123,8 +136,13 @@ let length_sort lists =
   List.map snd lists
 
 let length_test lists =
-  let lists = List.map (fun list -> List.length list, list) lists in
-  lists 
+  List.map (fun list -> list, List.length list) lists
+
+let length_sort2 lists =
+  let lists = List.map (fun list -> length_test list, list) lists in
+  let lists = List.sort (fun a b -> compare (fst a) (fst b)) lists in
+  List.map snd lists
+  
 
 (*TEST*)
 let ls = [[0;1;2;3]]
