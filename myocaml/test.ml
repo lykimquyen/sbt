@@ -105,3 +105,32 @@ let union_rank {id; size} i j =
 let is_connected_ranked {id; _} i j =
   (find_parent id i) = (find_parent id j)
 
+(*compute the length of the int list list*)
+let length_list classes =
+  let rec aux classes size =
+    match classes with
+      | [] -> size
+      | c :: classes' -> aux classes' (size + 1)
+  in aux classes 0
+
+let length_list_list classes = List.map length_list classes
+
+(*sorting the length of a list of list *)
+
+let length_sort lists =
+  let lists = List.map (fun list -> List.length list, list) lists in
+  let lists = List.sort (fun a b -> compare (fst a) (fst b)) lists in
+  List.map snd lists
+
+let length_test lists =
+  let lists = List.map (fun list -> List.length list, list) lists in
+  lists 
+
+(*TEST*)
+let ls = [[0;1;2;3]]
+
+let print_test = List.iter (Printf.printf "%i\n")
+
+  
+
+
