@@ -164,6 +164,6 @@ let print_sort_test =
  print_int_list_list ls_no_sort; print_string "]\n";
  
  let s = length_sort ls_no_sort in
- print_string "List sorted: [" ;
+ print_string "List sorted increasing order: [" ;
  print_int_list_list s; print_string "]\n"
   
