@@ -160,7 +160,7 @@ let print_length_pair_test =
   print_pair l
   
 let print_sort_test =
- print_string "List no sort: [";
+ print_string "List not sort: [";
  print_int_list_list ls_no_sort; print_string "]\n";
  
  let s = length_sort ls_no_sort in
