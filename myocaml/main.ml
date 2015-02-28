@@ -102,33 +102,33 @@ let is_connected_ranked {id; _} i j =
 
 (*compute the length of the int list list*)
   
- let length_list list =
+let length_list list =
   let rec aux count acc = function
     | [] -> []
     | [x] -> (x, count + 1) :: acc
     | a :: (b :: _ as t) ->
       if a = b
-      then aux (count +1) acc t
+      then aux (count + 1) acc t
       else
-        aux 0 ((a, count +1) :: acc) t
+        aux 0 ((a, count + 1) :: acc) t
   in aux 0 [] list
 
-let length_test lists =
+let length_list_list lists =
   List.map (fun list -> list, List.length list) lists		
-       
-(*sorting the length of a list of list *)
+    
+(*sorting the length of a list of list, increasing order *)
 
 let length_sort lists =
   let lists = List.map (fun list -> List.length list, list) lists in
-  let lists = List.sort (fun a b -> compare (fst a) (fst b)) lists in
+  let lists = List.sort (fun a b -> compare (fst b) (fst a)) lists in
   List.map snd lists
- 
+	
 (****************************************************************************************)
 (*TEST*)
 
 let l = [1; 2; 3]
-let ls = [[0;1;2];[3]]
-let ls_no_sort = [[4;5;3];[2;1];[0]]
+let ls = [[0;1;2];[3];[3;4;5;6;6]]
+let ls_no_sort = [[4;5;3;5];[2;1];[5;6;7];[0];[4;5;6;7;8;9]]
           
 let list_rev_fold = List.rev (List.fold_right (fun x acc -> [x]@acc) l [])
 
@@ -140,7 +140,7 @@ let rec print_int_list_list ls =
 	match ls with
 	| [] -> ()
 	| is :: ls' ->
-		let print_is = print_string "["; List.iter (fun i -> Printf.printf " %i " i) is in
+		let _ = print_string "["; List.iter (fun i -> Printf.printf " %i " i) is in
 		print_string "]";
 		print_int_list_list ls'
 		
@@ -156,14 +156,12 @@ let rec print_pair pair =
 		print_pair ls
 	 
 let print_length_pair_test =
-  let l = length_test ls in
+  let l = length_list_list ls in
   print_pair l
   
 let print_sort_test =
  print_string "List not sort: [";
  print_int_list_list ls_no_sort; print_string "]\n";
- 
  let s = length_sort ls_no_sort in
- print_string "List sorted increasing order: [" ;
+ print_string "List sorted descreasing order: [" ;
  print_int_list_list s; print_string "]\n"
-  
