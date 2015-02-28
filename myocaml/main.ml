@@ -122,11 +122,18 @@ let length_sort lists =
   let lists = List.map (fun list -> List.length list, list) lists in
   let lists = List.sort (fun a b -> compare (fst b) (fst a)) lists in
   List.map snd lists
+
+(*Remove duplicate inside a list*)
+let rec remove_dups ls =
+	match ls with
+	| [] -> [] 
+	| h :: t ->
+	  h :: (remove_dups (List.filter (fun x -> x <> h)t))
 	
 (****************************************************************************************)
 (*TEST*)
 
-let l = [1; 2; 3]
+let l = [1; 2; 3;3;2;2;1;2;3;4]
 let ls = [[0;1;2];[3];[3;4;5;6;6]]
 let ls_no_sort = [[4;5;3;5];[2;1];[5;6;7];[0];[4;5;6;7;8;9]]
           
@@ -165,3 +172,10 @@ let print_sort_test =
  let s = length_sort ls_no_sort in
  print_string "List sorted descreasing order: [" ;
  print_int_list_list s; print_string "]\n"
+ 
+ let print_compress = 
+ print_string "List with duplicate elements: ["
+ ; print_int_list l; print_string "]\n"
+ ; print_string "List after remove duplicate elements: ["
+ ; print_int_list (remove_dups l)
+ ; print_string "]\n"
