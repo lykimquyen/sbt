@@ -136,9 +136,8 @@ let rec remove_dups_lists ls =
 	| h :: t ->
 		let h' = remove_dups h in
 		h' :: (remove_dups_lists (List.filter(fun x -> 
-		let x' = remove_dups x in
-		      x' <> h')t))
-	
+		let x' = remove_dups x in x' <> h') t))  
+
 (****************************************************************************************)
 (*TEST*)
 
@@ -189,9 +188,17 @@ let print_sort_test =
  ; print_int_list (remove_dups l)
  ; print_string "]\n"
  
- let print_remove_dups_list =
+ let print_remove_dups_lists =
  print_string "3) List of list with duplicate elements: ["
  ; print_int_list_list ls; print_string "]\n"
  ; print_string "List after remove duplicate elements in a list of list: ["
  ; print_int_list_list (remove_dups_lists ls)
+ ; print_string "]\n"
+ 
+ let print_remove_dups_list =
+ print_string "4) List of list with duplicate elements: ["
+ ; print_int_list_list ls; print_string "]\n"
+ ; print_string "List after remove duplicate elements in a list of list: [";
+ let l = remove_dups_list ls in
+ print_int_list l
  ; print_string "]\n"
