@@ -124,17 +124,26 @@ let length_sort lists =
   List.map snd lists
 
 (*Remove duplicate inside a list*)
-let rec remove_dups ls =
-	match ls with
+let rec remove_dups l =
+	match l with
 	| [] -> [] 
 	| h :: t ->
 	  h :: (remove_dups (List.filter (fun x -> x <> h)t))
+	  
+let rec remove_dups_lists ls =
+	match ls with
+	| [] -> []
+	| h :: t ->
+		let h' = remove_dups h in
+		h' :: (remove_dups_lists (List.filter(fun x -> 
+		let x' = remove_dups x in
+		      x' <> h')t))
 	
 (****************************************************************************************)
 (*TEST*)
 
 let l = [1;2;3;3;2;2;1;2;3;4]
-let ls = [[0;1;2];[3];[3;4;5;6;6]]
+let ls = [[0;1;2;2;1;2;1;0];[3];[3;4;5;6;6]]
 let ls_no_sort = [[4;5;3;5];[2;1];[5;6;7];[0];[4;5;6;7;8;9]]
           
 let list_rev_fold = List.rev (List.fold_right (fun x acc -> [x]@acc) l [])
@@ -167,15 +176,22 @@ let print_length_pair_test =
   print_pair l
   
 let print_sort_test =
- print_string "List not sort: [";
+ print_string "1) List not sort: [";
  print_int_list_list ls_no_sort; print_string "]\n";
  let s = length_sort ls_no_sort in
  print_string "List sorted descreasing order: [" ;
  print_int_list_list s; print_string "]\n"
  
- let print_compress = 
- print_string "List with duplicate elements: ["
+ let print_remove_dups = 
+ print_string "2) List with duplicate elements: ["
  ; print_int_list l; print_string "]\n"
  ; print_string "List after remove duplicate elements: ["
  ; print_int_list (remove_dups l)
+ ; print_string "]\n"
+ 
+ let print_remove_dups_list =
+ print_string "3) List of list with duplicate elements: ["
+ ; print_int_list_list ls; print_string "]\n"
+ ; print_string "List after remove duplicate elements in a list of list: ["
+ ; print_int_list_list (remove_dups_lists ls)
  ; print_string "]\n"
