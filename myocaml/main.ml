@@ -119,10 +119,11 @@ let length_list_list lists =
 (*sorting the length of a list of list, increasing order *)
 
 let length_sort lists =
-  let lists = List.map (fun list -> List.length list, list) lists in
-  let lists = List.sort (fun a b -> compare (fst b) (fst a)) lists in
-  List.map snd lists
-
+  (*let lists = List.map (fun list -> list, List.length list) lists in*)
+  let lists = List.sort_uniq (fun a b -> compare (snd a) (snd b))
+                        (length_list_list lists) in
+  List.rev_map fst lists (*Keep the list in a pair (list,_) *)
+           
 (*Remove duplicate inside a list*)
 let rec remove_dups l =
 	match l with
@@ -136,15 +137,46 @@ let rec remove_dups_lists ls =
 	| h :: t ->
 		let h' = remove_dups h in
 		h' :: (remove_dups_lists (List.filter(fun x -> 
-		let x' = remove_dups x in x' <> h') t))  
+	        let x' = remove_dups x in x' <> h') t))
+                        
+(*sorting and remove duplicate*)
+      
+let length_sort_dups lists =
+  let remove_lists = remove_dups_lists lists in 
+  let lists = List.rev_map (fun list -> list, List.length list) remove_lists in
+  let lists = List.sort (fun a b -> compare (snd a) (snd b)) lists in
+  List.rev_map fst lists
 
-(****************************************************************************************)
+(*Construct a set from a list *)
+
+module Int_set = Set.Make (struct
+                              type t = int
+                              let compare = compare
+                            end)
+
+(*iters through a list to construct a set*)
+let set_of_list = List.fold_left (fun acc x ->
+                                  Int_set.add x acc) Int_set.empty
+                                 
+let set_of_list' = List.fold_left (fun acc x ->
+                                   Int_set.add x acc) Int_set.empty
+                                  
+(**********************************************************************************)
 (*TEST*)
 
 let l = [1;2;3;3;2;2;1;2;3;4]
 let ls = [[0;1;2;2;1;2;1;0];[3];[3;4;5;6;6]]
-let ls_no_sort = [[4;5;3;5];[2;1];[5;6;7];[0];[4;5;6;7;8;9]]
-          
+let ls_no_sort = [[4;5;3;5;7];[2;1];[5;6;7];[0];[4;5;6;6;6;5]]
+(*l1, l2 for testing the intersection of two sets*)
+let l1 = [3;4;5;6;7]
+let l2 = [1;3;5;7;9]
+(*l3, l4 for testing the union of two sets*)
+let l3 = [1;3;5;7]
+let l4 = [1;2;4;6]
+(*l5, l6 for testing the subset of two sets*)
+let l5 = [1;2]
+let l6 = [1;2;3]
+
 let list_rev_fold = List.rev (List.fold_right (fun x acc -> [x]@acc) l [])
 
 let list_fold_left = List.fold_left (fun x acc -> x + acc) 0 l
@@ -173,32 +205,84 @@ let rec print_pair pair =
 let print_length_pair_test =
   let l = length_list_list ls in
   print_pair l
-  
+
 let print_sort_test =
  print_string "1) List not sort: [";
  print_int_list_list ls_no_sort; print_string "]\n";
  let s = length_sort ls_no_sort in
- print_string "List sorted descreasing order: [" ;
+ print_string "a) List sorted descreasing order: [" ;
  print_int_list_list s; print_string "]\n"
- 
+                                     
+ let print_sort_dup_test =
+ let s = length_sort_dups ls_no_sort in
+ print_string "b) List sorted descreasing order and duplicates: [" ;
+ print_int_list_list s; print_string "]\n"
+                                     
  let print_remove_dups = 
- print_string "2) List with duplicate elements: ["
+ print_string "3) List with duplicate elements: ["
  ; print_int_list l; print_string "]\n"
  ; print_string "List after remove duplicate elements: ["
  ; print_int_list (remove_dups l)
  ; print_string "]\n"
  
  let print_remove_dups_lists =
- print_string "3) List of list with duplicate elements: ["
+ print_string "4) List of list with duplicate elements: ["
  ; print_int_list_list ls; print_string "]\n"
  ; print_string "List after remove duplicate elements in a list of list: ["
  ; print_int_list_list (remove_dups_lists ls)
  ; print_string "]\n"
  
  let print_remove_dups_list =
- print_string "4) List of list with duplicate elements: ["
+ print_string "5) List of list with duplicate elements: ["
  ; print_int_list_list ls; print_string "]\n"
  ; print_string "List after remove duplicate elements in a list of list: [";
- let l = remove_dups_list ls in
- print_int_list l
+ let l = remove_dups_lists ls in
+ print_int_list_list l
  ; print_string "]\n"
+
+ (*convert the list into a set, and test the intersection of two sets*)
+let print_inter_set =
+  let s1 = set_of_list l1 in
+  let s2 = set_of_list l2 in
+  let s3 = Int_set.inter s1 s2 in
+  print_string "6) The lists are:\n";
+  print_string "l1: [";
+  print_int_list l1; print_string "]\n";
+  print_string "l2: [";
+  print_int_list l2; print_string "]\n";
+  
+  print_string "Intersection of two sets: ";
+  Int_set.iter (fun elt -> Printf.printf " %i " elt) s3;
+  print_string "\n"
+
+(*convert the list into a set, and test the union of two sets*)
+let print_union_set =
+  let s1 = set_of_list l3 in
+  let s2 = set_of_list l4 in
+  let s3 = Int_set.union s1 s2 in
+  print_string "7) The lists are:\n";
+  print_string "l3: [";
+  print_int_list l3; print_string "]\n";
+  print_string "l4: [";
+  print_int_list l4; print_string "]\n";
+
+  print_string "Union of two sets: ";
+  Int_set.iter (fun elt -> Printf.printf " %i " elt) s3;
+  print_string "\n"
+
+(*convert the list into a set, and test the union of two sets*)
+let print_subset =
+  let s1 = set_of_list l5 in
+  let s2 = set_of_list l6 in
+  let s3 = Int_set.subset s1 s2 in
+  print_string "8) The lists are:\n";
+  print_string "l5: [";
+  print_int_list l5; print_string "]\n";
+  print_string "l6: [";
+  print_int_list l6; print_string "]\n";
+  if s3
+  then
+  print_string "Print the superset and remove the subset of two sets:[";
+  Int_set.iter (fun elt -> Printf.printf " %i " elt) s2;
+  print_string "]\n"
+
