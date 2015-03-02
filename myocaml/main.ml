@@ -126,19 +126,19 @@ let length_sort lists =
            
 (*Remove duplicate inside a list*)
 let rec remove_dups l =
-	match l with
-	| [] -> [] 
-	| h :: t ->
-	  h :: (remove_dups (List.filter (fun x -> x <> h)t))
-	  
+  match l with
+  | [] -> [] 
+  | h :: t ->
+     h :: (remove_dups (List.filter (fun x -> x <> h)t))
+	    
 let rec remove_dups_lists ls =
-	match ls with
-	| [] -> []
-	| h :: t ->
-		let h' = remove_dups h in
-		h' :: (remove_dups_lists (List.filter(fun x -> 
-	        let x' = remove_dups x in x' <> h') t))
-                        
+  match ls with
+  | [] -> []
+  | h :: t ->
+     let h' = remove_dups h in
+     h' :: (remove_dups_lists (List.filter(fun x -> 
+	                                   let x' = remove_dups x in x' <> h') t))
+             
 (*sorting and remove duplicate*)
       
 let length_sort_dups lists =
@@ -158,9 +158,6 @@ module Int_set = Set.Make (struct
 let set_of_list = List.fold_left (fun acc x ->
                                   Int_set.add x acc) Int_set.empty
                                  
-let set_of_list' = List.fold_left (fun acc x ->
-                                   Int_set.add x acc) Int_set.empty
-                                  
 (**********************************************************************************)
 (*TEST*)
 
@@ -184,63 +181,63 @@ let list_fold_left = List.fold_left (fun x acc -> x + acc) 0 l
 let print_int_list = List.iter (fun i -> Printf.printf "%i " i)
 
 let rec print_int_list_list ls =
-	match ls with
-	| [] -> ()
-	| is :: ls' ->
-		let _ = print_string "["; List.iter (fun i -> Printf.printf " %i " i) is in
-		print_string "]";
-		print_int_list_list ls'
-		
+  match ls with
+  | [] -> ()
+  | is :: ls' ->
+     let _ = print_string "["; List.iter (fun i -> Printf.printf " %i " i) is in
+     print_string "]";
+     print_int_list_list ls'
+		         
 let print_test = print_int_list_list ls
-
+                                     
 let rec print_pair pair =
-	match pair with
-	| [] -> ()
-	| (p, i) :: ls ->
-		let _ = print_string "\nList:[ "; print_int_list p; print_string "]\nLength: ";
-		print_int i; print_string "\n"
-    	in
-		print_pair ls
-	 
+  match pair with
+  | [] -> ()
+  | (p, i) :: ls ->
+     let _ = print_string "\nList:[ "; print_int_list p; print_string "]\nLength: ";
+	     print_int i; print_string "\n"
+     in
+     print_pair ls
+	        
 let print_length_pair_test =
   let l = length_list_list ls in
   print_pair l
-
+             
 let print_sort_test =
- print_string "1) List not sort: [";
- print_int_list_list ls_no_sort; print_string "]\n";
- let s = length_sort ls_no_sort in
- print_string "a) List sorted descreasing order: [" ;
- print_int_list_list s; print_string "]\n"
-                                     
- let print_sort_dup_test =
- let s = length_sort_dups ls_no_sort in
- print_string "b) List sorted descreasing order and duplicates: [" ;
- print_int_list_list s; print_string "]\n"
-                                     
- let print_remove_dups = 
- print_string "3) List with duplicate elements: ["
- ; print_int_list l; print_string "]\n"
- ; print_string "List after remove duplicate elements: ["
- ; print_int_list (remove_dups l)
- ; print_string "]\n"
- 
- let print_remove_dups_lists =
- print_string "4) List of list with duplicate elements: ["
- ; print_int_list_list ls; print_string "]\n"
- ; print_string "List after remove duplicate elements in a list of list: ["
- ; print_int_list_list (remove_dups_lists ls)
- ; print_string "]\n"
- 
- let print_remove_dups_list =
- print_string "5) List of list with duplicate elements: ["
- ; print_int_list_list ls; print_string "]\n"
- ; print_string "List after remove duplicate elements in a list of list: [";
- let l = remove_dups_lists ls in
- print_int_list_list l
- ; print_string "]\n"
-
- (*convert the list into a set, and test the intersection of two sets*)
+  print_string "1) List not sort: [";
+  print_int_list_list ls_no_sort; print_string "]\n";
+  let s = length_sort ls_no_sort in
+  print_string "a) List sorted descreasing order: [" ;
+  print_int_list_list s; print_string "]\n"
+                                      
+let print_sort_dup_test =
+  let s = length_sort_dups ls_no_sort in
+  print_string "b) List sorted descreasing order and duplicates: [" ;
+  print_int_list_list s; print_string "]\n"
+                                      
+let print_remove_dups = 
+  print_string "3) List with duplicate elements: ["
+  ; print_int_list l; print_string "]\n"
+  ; print_string "List after remove duplicate elements: ["
+  ; print_int_list (remove_dups l)
+  ; print_string "]\n"
+                 
+let print_remove_dups_lists =
+  print_string "4) List of list with duplicate elements: ["
+  ; print_int_list_list ls; print_string "]\n"
+  ; print_string "List after remove duplicate elements in a list of list: ["
+  ; print_int_list_list (remove_dups_lists ls)
+  ; print_string "]\n"
+                 
+let print_remove_dups_list =
+  print_string "5) List of list with duplicate elements: ["
+  ; print_int_list_list ls; print_string "]\n"
+  ; print_string "List after remove duplicate elements in a list of list: [";
+  let l = remove_dups_lists ls in
+  print_int_list_list l
+  ; print_string "]\n"
+                 
+(*convert the list into a set, and test the intersection of two sets*)
 let print_inter_set =
   let s1 = set_of_list l1 in
   let s2 = set_of_list l2 in
