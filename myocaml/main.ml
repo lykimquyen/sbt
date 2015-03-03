@@ -321,11 +321,11 @@ let rec subset_lists' ls =
      print_string "]\nList l2: [";
      print_list l2;
      print_string "]\n";
-        
      if Int_set.subset s1 s2
-     then 
+     then
+       let s = Int_set.diff s1 s2 in
        print_string "Subset in a lists: [";
-     Int_set.iter (fun elt -> Printf.printf " %i " elt) s2;
+     Int_set.iter (fun elt -> Printf.printf " %i " elt) s;
      print_string "]\n";
      subset_lists' ls'
       
@@ -338,3 +338,34 @@ let print_subset_lists2 =
   print_string "10) wrong Subset in a lists: \n";
   subset_lists' l8;
   print_string "\n"
+
+
+let test y l = List.map (List.filter (fun x -> List.mem x y))l
+
+let test' l =
+  match l with
+  | [] -> []
+  | l1 :: ls -> test l1 ls
+
+let l10 = [[1;2;3;4];[1;2];[1;2;3];[0]]
+
+let print_test' =
+  let t = test' l10 in
+  print_list_list t; print_string"\n"
+
+let test1 l1 ls =
+  List.map (List.filter
+              (fun x ->
+               List.mem x l1
+              )
+           )
+           ls
+
+let test2 l =
+  match l with
+  | [] -> []
+  | l1 :: ls -> test1 l1 ls
+                      
+let print_test2 =
+  let t = test2 l10 in
+  print_list_list t
