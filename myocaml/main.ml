@@ -114,7 +114,7 @@ let length_list list =
   in aux 0 [] list
 
 let length_list_list lists =
-  List.map (fun list -> list, List.length list) lists		
+  List.map (fun list -> list, List.length list) lists
     
 (*sorting the length of a list of list, increasing order *)
 
@@ -173,28 +173,33 @@ let l4 = [1;2;4;6]
 (*l5, l6 for testing the subset of two sets*)
 let l5 = [1;2]
 let l6 = [1;2;3]
+(*l7 for testing the subset_lists*)
+let l7 = [[1;2];[1;2;3];[1;2;4]]
+let l8 = [[1;2];[1;2;4;5];[1;2;4]]
+(*l9 for remove test*)
+let l9 = [[1;2;3;4];[1;2];[1;2;3;4];[0]]
 
 let list_rev_fold = List.rev (List.fold_right (fun x acc -> [x]@acc) l [])
 
 let list_fold_left = List.fold_left (fun x acc -> x + acc) 0 l
   
-let print_int_list = List.iter (fun i -> Printf.printf "%i " i)
+let print_list = List.iter (fun i -> Printf.printf "%i " i)
 
-let rec print_int_list_list ls =
+let rec print_list_list ls =
   match ls with
   | [] -> ()
   | is :: ls' ->
      let _ = print_string "["; List.iter (fun i -> Printf.printf " %i " i) is in
      print_string "]";
-     print_int_list_list ls'
+     print_list_list ls'     
 		         
-let print_test = print_int_list_list ls
+let print_test = print_list_list ls
                                      
 let rec print_pair pair =
   match pair with
   | [] -> ()
   | (p, i) :: ls ->
-     let _ = print_string "\nList:[ "; print_int_list p; print_string "]\nLength: ";
+     let _ = print_string "\nList:[ "; print_list p; print_string "]\nLength: ";
 	     print_int i; print_string "\n"
      in
      print_pair ls
@@ -205,36 +210,36 @@ let print_length_pair_test =
              
 let print_sort_test =
   print_string "1) List not sort: [";
-  print_int_list_list ls_no_sort; print_string "]\n";
+  print_list_list ls_no_sort; print_string "]\n";
   let s = length_sort ls_no_sort in
   print_string "a) List sorted descreasing order: [" ;
-  print_int_list_list s; print_string "]\n"
+  print_list_list s; print_string "]\n"
                                       
 let print_sort_dup_test =
   let s = length_sort_dups ls_no_sort in
   print_string "b) List sorted descreasing order and duplicates: [" ;
-  print_int_list_list s; print_string "]\n"
+  print_list_list s; print_string "]\n"
                                       
 let print_remove_dups = 
   print_string "3) List with duplicate elements: ["
-  ; print_int_list l; print_string "]\n"
+  ; print_list l; print_string "]\n"
   ; print_string "List after remove duplicate elements: ["
-  ; print_int_list (remove_dups l)
+  ; print_list (remove_dups l)
   ; print_string "]\n"
                  
 let print_remove_dups_lists =
   print_string "4) List of list with duplicate elements: ["
-  ; print_int_list_list ls; print_string "]\n"
+  ; print_list_list ls; print_string "]\n"
   ; print_string "List after remove duplicate elements in a list of list: ["
-  ; print_int_list_list (remove_dups_lists ls)
+  ; print_list_list (remove_dups_lists ls)
   ; print_string "]\n"
                  
 let print_remove_dups_list =
   print_string "5) List of list with duplicate elements: ["
-  ; print_int_list_list ls; print_string "]\n"
+  ; print_list_list ls; print_string "]\n"
   ; print_string "List after remove duplicate elements in a list of list: [";
   let l = remove_dups_lists ls in
-  print_int_list_list l
+  print_list_list l
   ; print_string "]\n"
                  
 (*convert the list into a set, and test the intersection of two sets*)
@@ -244,9 +249,9 @@ let print_inter_set =
   let s3 = Int_set.inter s1 s2 in
   print_string "6) The lists are:\n";
   print_string "l1: [";
-  print_int_list l1; print_string "]\n";
+  print_list l1; print_string "]\n";
   print_string "l2: [";
-  print_int_list l2; print_string "]\n";
+  print_list l2; print_string "]\n";
   
   print_string "Intersection of two sets: ";
   Int_set.iter (fun elt -> Printf.printf " %i " elt) s3;
@@ -259,9 +264,9 @@ let print_union_set =
   let s3 = Int_set.union s1 s2 in
   print_string "7) The lists are:\n";
   print_string "l3: [";
-  print_int_list l3; print_string "]\n";
+  print_list l3; print_string "]\n";
   print_string "l4: [";
-  print_int_list l4; print_string "]\n";
+  print_list l4; print_string "]\n";
 
   print_string "Union of two sets: ";
   Int_set.iter (fun elt -> Printf.printf " %i " elt) s3;
@@ -274,12 +279,62 @@ let print_subset =
   let s3 = Int_set.subset s1 s2 in
   print_string "8) The lists are:\n";
   print_string "l5: [";
-  print_int_list l5; print_string "]\n";
+  print_list l5; print_string "]\n";
   print_string "l6: [";
-  print_int_list l6; print_string "]\n";
+  print_list l6; print_string "]\n";
   if s3
   then
   print_string "Print the superset and remove the subset of two sets:[";
   Int_set.iter (fun elt -> Printf.printf " %i " elt) s2;
   print_string "]\n"
 
+(*do subset in a list of lists*)
+let rec subset_lists ls =
+  match ls with
+  | [] -> print_string "nothing\n"
+  | l1 :: ls' ->
+     List.iter
+       (fun l2 ->
+        let s1 = set_of_list l1 in
+        let s2 = set_of_list l2 in
+        print_string "List l1: [";
+        print_list l1;
+        print_string "]\nList l2: [";
+        print_list l2;
+        print_string "]\n";
+
+        if Int_set.subset s1 s2
+        then
+          print_string "Subset in a lists: [";
+        Int_set.iter (fun elt -> Printf.printf " %i " elt) s2;
+        print_string "]\n"
+       ) ls'
+
+let rec subset_lists' ls =
+  match ls with
+  | []  | _ :: [] -> ()
+  | l1 :: (l2 :: ls') ->
+     let s1 = set_of_list l1 in
+     let s2 = set_of_list l2 in
+     print_string "List l1: [";
+     print_list l1;
+     print_string "]\nList l2: [";
+     print_list l2;
+     print_string "]\n";
+        
+     if Int_set.subset s1 s2
+     then 
+       print_string "Subset in a lists: [";
+     Int_set.iter (fun elt -> Printf.printf " %i " elt) s2;
+     print_string "]\n";
+     subset_lists' ls'
+      
+let print_subset_lists =
+  print_string "9) Subset in a lists: \n";
+  subset_lists l7;
+  print_string "\n"
+
+let print_subset_lists2 =
+  print_string "10) wrong Subset in a lists: \n";
+  subset_lists' l8;
+  print_string "\n"
