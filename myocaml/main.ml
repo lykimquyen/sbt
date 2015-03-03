@@ -310,9 +310,10 @@ let rec subset_lists ls =
         print_string "]\n"
        ) ls'
 
-let rec subset_lists' ls =
+let rec subset_lists2 ls =
   match ls with
-  | []  | _ :: [] -> ()
+  | [] -> print_string "empty\n"  
+  | _ :: [] -> print_string "one element in a list\n"
   | l1 :: (l2 :: ls') ->
      let s1 = set_of_list l1 in
      let s2 = set_of_list l2 in
@@ -323,46 +324,44 @@ let rec subset_lists' ls =
      print_string "]\n";
      if Int_set.subset s1 s2
      then
-       let s = Int_set.diff s1 s2 in
-       print_string "Subset in a lists: [";
-     Int_set.iter (fun elt -> Printf.printf " %i " elt) s;
+     print_string "Subset in a lists: [";
+     Int_set.iter (fun elt -> Printf.printf " %i " elt) s2;
      print_string "]\n";
-     subset_lists' ls'
-      
+     subset_lists2 ls'
+
+(* Keep this function for learning *)
 let print_subset_lists =
   print_string "9) Subset in a lists: \n";
   subset_lists l7;
   print_string "\n"
 
+(* Keep this function for learning; it wrong because it missing the rest of the list *)
 let print_subset_lists2 =
-  print_string "10) wrong Subset in a lists: \n";
-  subset_lists' l8;
+  print_string "10) Wrong subset in a lists: \n";
+  subset_lists2 l7;
   print_string "\n"
 
+(* Remove a subset in a list of lists *)
+let map_filter l1 ls = List.map (List.filter (fun x -> List.mem x l1))ls
 
-let test y l = List.map (List.filter (fun x -> List.mem x y))l
-
-let test' l =
-  match l with
+let result_filter ls =
+  match ls with
   | [] -> []
-  | l1 :: ls -> test l1 ls
+  | l1 :: ls' -> map_filter l1 ls'
+  
+let result ls =
+	let ls' = result_filter ls in
+	List.filter (fun l -> not (List.mem l ls')) ls
 
 let l10 = [[1;2;3;4];[1;2];[1;2;3];[0]]
 
-let print_test' =
-  let t = test' l10 in
-  print_list_list t; print_string"\n"
+let print_result_filter =
+  let r = result_filter l10 in
+  print_string "11) List of lists test:"; print_list_list l10; print_string "\n";
+  print_string "a) Return the subset:";
+  print_list_list r; print_string"\n"
 
-let test1 x y ls =
-  let u = Int_set.union x y in
-  Int_set.filter (fun x ->
-                  Int_set.mem x u) ls
-  
-(*let test2 l =
-  match l with
-  | [] -> []
-  | l1 :: ls -> test1 l1 ls
-                      
-let print_test2 =
-  let t = test2 l10 in
-  print_list_list t*)
+let print_result =
+  let r = result l10 in
+  print_string "b) Remove the subset:";
+  print_list_list r; print_string "\n"
