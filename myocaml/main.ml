@@ -168,8 +168,8 @@ let ls_no_sort = [[4;5;3;5;7];[2;1];[5;6;7];[0];[4;5;6;6;6;5]]
 let l1 = [3;4;5;6;7]
 let l2 = [1;3;5;7;9]
 (*l3, l4 for testing the union of two sets*)
-let l3 = [1;3;5;7]
-let l4 = [1;2;4;6]
+let l3 = [1;2;3;4]
+let l4 = [1;2]
 (*l5, l6 for testing the subset of two sets*)
 let l5 = [1;2]
 let l6 = [1;2;3]
@@ -353,19 +353,16 @@ let print_test' =
   let t = test' l10 in
   print_list_list t; print_string"\n"
 
-let test1 l1 ls =
-  List.map (List.filter
-              (fun x ->
-               List.mem x l1
-              )
-           )
-           ls
-
-let test2 l =
+let test1 x y ls =
+  let u = Int_set.union x y in
+  Int_set.filter (fun x ->
+                  Int_set.mem x u) ls
+  
+(*let test2 l =
   match l with
   | [] -> []
   | l1 :: ls -> test1 l1 ls
                       
 let print_test2 =
   let t = test2 l10 in
-  print_list_list t
+  print_list_list t*)
