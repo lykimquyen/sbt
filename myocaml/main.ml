@@ -365,3 +365,28 @@ let print_result =
   let r = result l10 in
   print_string "b) Remove the subset:";
   print_list_list r; print_string "\n"
+
+(*Test list flatten*)
+let print_flatten =
+  print_string "12) List of lists before flatten: ";
+  print_list_list l10; print_string "\n";
+  let l = List.flatten l10 in
+  print_string "Print list flatten: ";
+  print_list l;
+  print_string "\n"
+
+(*remove duplicate in a list of lists by using a hashtable*)
+let age = Hashtbl.create 3;;
+
+Hashtbl.replace age "Nat" 24;;
+
+let assoc_list2hashtbl assoc_list =
+  let h = Hashtbl.create 0 in
+  List.iter (fun (k,v) -> Hashtbl.replace h k v) assoc_list;
+  h
+
+let food_color = assoc_list2hashtbl
+                   ["Apple", "red"; "Banana", "yellow"]
+                         
+(*let print_hashtbl =
+  Hashtbl.iter (fun f _ -> print_endline f) food_color*)
