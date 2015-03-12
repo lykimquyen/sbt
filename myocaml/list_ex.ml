@@ -111,7 +111,46 @@ let rec uniquesOnly l =
 let rec uniquesOnly_filter l =
   match l with
     | [] -> []
-    | h :: t -> h :: (uniquesOnly_filter (List.filter ((<>) h)t))
+    | h :: t -> h :: (uniquesOnly_filter (List.filter ((=) h)t))
+
+(*return a list of member in this list *)
+let get_nth x l =
+  let i = List.nth x l in
+  i
+
+(*return position of elements in a list*)
+let position p alst =
+  List.rev (snd
+    (List.fold_left (fun (ind, lst) x ->
+                     if p x
+                     then (ind + 1, ind :: lst)
+                     else (ind + 1, lst))
+                    (1, []) alst))
+
+let filter_position l =
+  position (fun x -> List.mem x l) l
+
+let return_label_pos l =
+  let f = List.filter (fun x -> List.mem x l)l in
+  (f, position (fun x -> List.mem x l) f)
+
+let return_label_pos2 l =
+  match l with
+  | [] -> ([],[])
+  | h :: tl as l->
+     let f = (*h :: List.filter((<>) h) tl in*)
+       uniquesOnly_filter l in
+     (f, position (fun x -> List.mem x l) l)
+
+let rec even_elements l index acc_l =
+  match l with
+  | h::t ->
+    if (index mod 2 == 0 )
+    then even_elements t (index+1) (acc_l@[h])
+    else even_elements t (index+1) acc_l
+  | [] ->  acc_l;;
+
+(**)
     
 (**********************************************************************************)
 (*TEST*)
@@ -193,7 +232,7 @@ let print_flatten =
   print_string "\n"
 
 (* test the uniquesOnly *)
-let print_uniquesOnly =
+(*let print_uniquesOnly =
   print_string "9) List original: ";
   print_list l1; print_string "\n";
   let l = uniquesOnly l1 in
@@ -207,4 +246,23 @@ let print_uniquesOnly_filter =
   let l = uniquesOnly_filter l1 in
   print_string "List of uniquesOnly_filter is:";
   print_list l;
-  print_string "\n"
+  print_string "\n"*)
+
+let print_return_nth =
+  print_string "10) List original: ";
+  print_list l1; print_string "\n";
+  let l = filter_position l1 in
+  print_string "List of return_nth is:";
+  print_list l; print_string "\n"
+                             
+let print_return_position =
+  print_string "10) List original: ";
+  print_list l1; print_string "\n";
+  let l = return_label_pos l1 in
+  print_string "List of position 1 is:";
+  print_pair_list2 l; print_string "\n"
+                                   
+let print_return_position2 =
+  let l = return_label_pos2 l1 in
+  print_string "List of postion 2 is:";
+  print_pair_list2 l; print_string "\n"

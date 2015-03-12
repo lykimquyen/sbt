@@ -2,6 +2,7 @@
 (* 08-03-2015                                                                           *)
 (* Set                                                                                  *)
 (****************************************************************************************)
+open Output
 
 (*Construct a set from a list *)
 
@@ -54,6 +55,16 @@ let rec subset_lists2 ls =
      Int_set.iter (fun elt -> Printf.printf " %i " elt) s2;
      print_string "]\n";
      subset_lists2 ls'
+
+(* convert a list into a set *)
+module StringSet = Set.Make (String)
+
+(*elt list -> t *)
+let set_to_list l =
+  List.fold_left (fun set elem ->
+                  StringSet.add elem set
+    ) StringSet.empty l
+
 
 (**********************************************************************************)
 (*TEST*)

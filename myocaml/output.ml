@@ -21,4 +21,19 @@ let rec print_pair pair =
 	     print_int i; print_string "\n"
      in
      print_pair ls
+                
+let rec print_pair_list l =
+  match l with
+  | [] -> ()
+  | h :: tl ->
+     let _ = print_pair h in
+     print_pair_list tl
+                     
+let rec print_pair_list2 (p,l) =
+  print_list p;
+  print_string "; ";
+  print_list l
+             
+let print_int_pair (p,i) =
+  print_int p; print_string ","; print_int i; print_string "\n"
                                    
