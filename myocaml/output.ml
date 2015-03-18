@@ -3,7 +3,15 @@
 (* Printing function                                                                    *)
 (****************************************************************************************)
 
-let print_list = List.iter (fun i -> Printf.printf "%i " i)
+(*let print_list = List.iter (fun i -> Printf.printf "%i " i)*)
+
+let rec print_list l =
+  match l with
+    | [] -> print_string "empty_list"
+    | h :: [] -> print_string ""; print_int h; print_string " "
+    | h :: tl ->
+      let _ = print_string " "; print_int h; print_string "; " in
+      print_list tl
 
 let rec print_list_list ls =
   match ls with
