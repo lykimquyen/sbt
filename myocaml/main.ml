@@ -3,9 +3,11 @@
 (* Main functions                                                                       *)
 (****************************************************************************************)
 
-open List_ex
+(*open List_ex*)
+open Union_find
 
-let main = ()
+let main =
+  ()
            
 
 
