@@ -1,3 +1,4 @@
 
-ocamlopt -o main output.ml list_ex.ml hash_ex.ml main.ml
+ocamlc -c output.ml union_find.ml main.ml;
+ocamlopt -o main output.ml union_find.ml main.ml
 #ocamlc -i main.ml > main.mli
