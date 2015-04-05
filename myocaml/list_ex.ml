@@ -151,11 +151,34 @@ let rec even_elements l index acc_l =
   | [] ->  acc_l;;
 
 (**)
-    
-(**********************************************************************************)
+let rec find e l =
+  match l with
+    | [] -> false
+    | h :: tl -> h = e || find e tl
+
+let rec union_list l1 l2 =
+  match l1 with
+    | [] -> l2
+    | h :: tl ->
+      if find h l2
+      then
+	union_list tl l2
+      else
+	union_list tl (h::l2)
+
+(*****************************************************************************)
 (*TEST*)
 
 open Output
+
+let l = [1]
+let l2 = [0]
+
+let print_union =
+  print_string "UNION: ";
+  let l = union_list l l2 in
+  print_list l;
+  print_string "\n"
 
 let l1 = [1;2;3;3;2;2;1;2;3;4]
 let ls1 = [[0;1;2;2;1;2;1;0];[3];[3;4;5;6;6]]
